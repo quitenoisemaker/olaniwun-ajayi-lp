@@ -146,6 +146,8 @@ The API provides endpoints for the database assessment tasks and optional user/p
 | GET    | `/api/v1/employees/multiple-projects` | Employees with multiple projects              | `{"success": true, "data": [{"id": 1, "employee_name": "Alice Johnson", "project_count": 2}, ...]}` |
 
 ### Testing the API
+- Postman Documentation:
+    https://documenter.getpostman.com/view/11348515/2sB34oBcZv
 - Use Postman or cURL to send requests:
   ```bash
   curl http://localhost:8000/api/v1/employees
