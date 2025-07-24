@@ -144,8 +144,6 @@ The API provides endpoints for the database assessment tasks and optional user/p
 | GET    | `/api/v1/employees`                   | List employees with department names          | `{"success": true, "data": [{"id": 1, "employee_name": "Alice Johnson", "department_name": "Legal"}, ...]}` |
 | GET    | `/api/v1/departments/salary`          | Total salary expenditure per department       | `{"success": true, "data": [{"id": 1, "department_name": "Legal", "total_salary": 122000.00}, ...]}` |
 | GET    | `/api/v1/employees/multiple-projects` | Employees with multiple projects              | `{"success": true, "data": [{"id": 1, "employee_name": "Alice Johnson", "project_count": 2}, ...]}` |
-| GET    | `/api/v1/users`                      | List all users with roles and departments     | `{"success": true, "data": [{"id": 1, "name": "Alice Johnson", "email": "...", "department": {...}}, ...]}` |
-| GET    | `/api/v1/projects`                   | List all projects with assigned users         | `{"success": true, "data": [{"id": 1, "title": "CMS Upgrade", "assigned_user": {...}}, ...]}` |
 
 ### Testing the API
 - Use Postman or cURL to send requests:
