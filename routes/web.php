@@ -20,30 +20,31 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/admin/users', AdminUserController::class);
     Route::prefix('admin/users')->group(function () {
         Route::controller(AdminUserController::class)->group(function () {
-            Route::put('/{user}/toggle-activate', 'toggleActivate')
-                ->name('admin.user.toggleActivate');
-
+            Route::put('/{user}/toggle-activate', 'toggleActivate')->name('admin.user.toggleActivate');
             Route::post('/search', 'searchUsers')->name('users.search');
         });
     });
 
 
-    // Route::resource('/admin/projects', AdminUserProjectController::class);
     // Project Routes
-    Route::get('projects', [AdminUserProjectController::class, 'index'])->name('admin.projects.index');
-    Route::get('projects/create', [AdminUserProjectController::class, 'create'])->name('admin.projects.create');
-    Route::post('projects', [AdminUserProjectController::class, 'store'])->name('admin.projects.store');
-    Route::get('projects/{project}/edit', [AdminUserProjectController::class, 'edit'])->name('admin.projects.edit');
-    Route::put('projects/{project}', [AdminUserProjectController::class, 'update'])->name('admin.projects.update');
-    Route::delete('projects/{project}', [AdminUserProjectController::class, 'destroy'])->name('admin.projects.destroy');
+    Route::prefix('projects')->group(function () {
+        Route::controller(AdminUserProjectController::class)->group(function () {
+            Route::get('/', 'index')->name('admin.projects.index');
+            Route::get('/create', 'create')->name('admin.projects.create');
+            Route::post('/', 'store')->name('admin.projects.store');
+            Route::get('/{project}/edit', 'edit')->name('admin.projects.edit');
+            Route::put('/{project}', 'update')->name('admin.projects.update');
+            Route::delete('/{project}', 'destroy')->name('admin.projects.destroy');
 
-    // Task Routes
-    Route::get('projects/{project}/tasks', [AdminUserProjectController::class, 'showTasks'])->name('admin.projects.tasks');
-    Route::get('projects/{project}/tasks/create', [AdminUserProjectController::class, 'createTask'])->name('admin.projects.tasks.create');
-    Route::post('projects/{project}/tasks', [AdminUserProjectController::class, 'storeTask'])->name('admin.projects.tasks.store');
-    Route::get('projects/{project}/tasks/{task}/edit', [AdminUserProjectController::class, 'editTask'])->name('admin.projects.tasks.edit');
-    Route::put('projects/{project}/tasks/{task}', [AdminUserProjectController::class, 'updateTask'])->name('admin.projects.tasks.update');
-    Route::delete('projects/{project}/tasks/{task}', [AdminUserProjectController::class, 'destroyTask'])->name('admin.projects.tasks.destroy');
+            // Task Routes
+            Route::get('/{project}/tasks', 'showTasks')->name('admin.projects.tasks');
+            Route::get('/{project}/tasks/create', 'createTask')->name('admin.projects.tasks.create');
+            Route::post('/{project}/tasks', 'storeTask')->name('admin.projects.tasks.store');
+            Route::get('/{project}/tasks/{task}/edit', 'editTask')->name('admin.projects.tasks.edit');
+            Route::put('/{project}/tasks/{task}', 'updateTask')->name('admin.projects.tasks.update');
+            Route::delete('/{project}/tasks/{task}', 'destroyTask')->name('admin.projects.tasks.destroy');
+        });
+    });
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
