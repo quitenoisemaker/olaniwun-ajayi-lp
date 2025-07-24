@@ -2,63 +2,82 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Http\Requests\TaskRequest;
+use App\Http\Requests\ProjectRequest;
 
 class AdminUserProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('admin.projects.index');
+        $projects = Project::with(['tasks'])->latest()->paginate(config('app.paginate_number'));
+        return view('admin.projects.index', compact('projects'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
-        //
+        Project::create($request->validated());
+        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(ProjectRequest $request, Project $project)
     {
-        //
+        $project->update($request->validated());
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function showTasks(Project $project)
     {
-        //
+        $tasks = $project->tasks()->with('assignedUser')->get();
+        return view('admin.projects.tasks.index', compact('project', 'tasks'));
+    }
+
+    public function createTask(Project $project)
+    {
+        $users = User::where('is_active', true)->get();
+        return view('admin.projects.tasks.create', compact('project', 'users'));
+    }
+
+    public function storeTask(TaskRequest $request, Project $project)
+    {
+        $project->tasks()->create($request->validated());
+        return redirect()->route('admin.projects.tasks', $project->id)->with('success', 'Task created successfully.');
+    }
+
+    public function editTask(Project $project, Task $task)
+    {
+        $users = User::where('is_active', true)->get();
+        return view('admin.projects.tasks.edit', compact('project', 'task', 'users'));
+    }
+
+    public function updateTask(TaskRequest $request, Project $project, Task $task)
+    {
+        $task->update($request->validated());
+        return redirect()->route('admin.projects.tasks', $project->id)->with('success', 'Task updated successfully.');
+    }
+
+    public function destroyTask(Project $project, Task $task)
+    {
+        $task->delete();
+        return redirect()->route('admin.projects.tasks', $project->id)->with('success', 'Task deleted successfully.');
     }
 }

@@ -13,51 +13,48 @@
                     </div>
                 @endif
 
-                <div class="mb-3">
-                    <a href="{{ route('admin.projects.create') }}" class="btn btn-success mt-2">Create New Project</a>
-                </div>
-
                 <div class="card">
-                    <div class="card-header">{{ __('Project Management') }}</div>
+                    <div class="card-header">{{ __('Tasks for Project: ' . $project->title) }}</div>
                     <div class="card-body">
+                        <a href="{{ route('admin.projects.tasks.create', $project->id) }}" class="btn btn-success mb-3">Create New Task</a>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Title</th>
                                         <th scope="col">Description</th>
-                                        <th scope="col">Tasks</th>
+                                        <th scope="col">Assigned User</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="search-body">
-                                    @if ($projects->count() > 0)
-                                        @foreach ($projects as $project)
+                                <tbody>
+                                    @if ($tasks->count() > 0)
+                                        @foreach ($tasks as $task)
                                             <tr>
-                                                <td>{{ $project->title }}</td>
-                                                <td>{{ $project->description ?? 'N/A' }}</td>
-                                                <td><a href="{{ route('admin.projects.tasks', $project->id) }}" class="btn btn-success btn-sm">View Tasks ({{ $project->tasks->count() }})</a></td>
+                                                <td>{{ $task->title }}</td>
+                                                <td>{{ $task->description ?? 'N/A' }}</td>
+                                                <td>{{ $task->assignedUser ? $task->assignedUser->name : 'N/A' }}</td>
+                                                <td>{{ $task->is_completed ? 'Completed' : 'Pending' }}</td>
                                                 <td>
-                                                    <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-info btn-sm">Edit</a>
-                                                    <form method="POST" action="{{ route('admin.projects.destroy', $project->id) }}" style="display: inline-block;">
+                                                    <a href="{{ route('admin.projects.tasks.edit', [$project->id, $task->id]) }}" class="btn btn-info btn-sm">Edit</a>
+                                                    <form method="POST" action="{{ route('admin.projects.tasks.destroy', [$project->id, $task->id]) }}" style="display: inline-block;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm m-1" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm m-1" onclick="return confirm('Are you sure you want to delete this task?')">Delete</button>
                                                     </form>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @else
-                                        <tr id="no-data" class="text-center"><td colspan="5">No projects found</td></tr>
+                                        <tr class="text-center"><td colspan="5">No tasks found</td></tr>
                                     @endif
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="mt-3">
-                    {{ $projects->links() }}
-                </div>
+                <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary mt-3">Back to Projects</a>
             </div>
         </div>
     </div>

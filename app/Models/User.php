@@ -54,18 +54,23 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_user_id');
+    }
+
     public function scopeGetUsers($query)
     {
         return $query->select('id', 'name', 'email', 'created_at', 'role_id', 'is_active')
             ->with('role');
     }
 
-     public function scopeFilter($query, $filters)
+    public function scopeFilter($query, $filters)
     {
         return $query->with('role')->when($filters['search'] ?? null, function ($query, $searchItem) {
             $query->where(function ($q) use ($searchItem) {
                 $q->where('name', 'like', "%{$searchItem}%")
-                  ->orWhere('email', 'like', "%{$searchItem}%");
+                    ->orWhere('email', 'like', "%{$searchItem}%");
             })->orWhereHas('role', function ($q) use ($searchItem) {
                 $q->where('name', 'like', "%{$searchItem}%");
             });
