@@ -65,6 +65,11 @@ class User extends Authenticatable
             ->with('role');
     }
 
+    public function scopeGetActiveUsers($query)
+    {
+        return $query->getUsers()->where('is_active', true);
+    }
+
     public function scopeFilter($query, $filters)
     {
         return $query->with('role')->when($filters['search'] ?? null, function ($query, $searchItem) {

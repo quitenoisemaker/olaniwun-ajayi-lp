@@ -53,7 +53,7 @@ class AdminUserProjectController extends Controller
 
     public function createTask(Project $project)
     {
-        $users = User::where('is_active', true)->get();
+        $users = User::getActiveUsers()->get();
         return view('admin.projects.tasks.create', compact('project', 'users'));
     }
 
@@ -65,7 +65,7 @@ class AdminUserProjectController extends Controller
 
     public function editTask(Project $project, Task $task)
     {
-        $users = User::where('is_active', true)->get();
+        $users = User::getActiveUsers()->get();
         return view('admin.projects.tasks.edit', compact('project', 'task', 'users'));
     }
 
